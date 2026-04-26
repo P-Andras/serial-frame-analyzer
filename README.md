@@ -25,7 +25,7 @@ This repository follows a full Software Development Life Cycle approach:
 
 ### Installation
 ```bash
-git clone [https://github.com/YOUR_USERNAME/serial-frame-analyzer.git](https://github.com/YOUR_USERNAME/serial-frame-analyzer.git)
+git clone [https://github.com/P-Andras/serial-frame-analyzer.git](https://github.com/P-Andras/serial-frame-analyzer.git)
 cd serial-frame-analyzer
 python3 -m venv .venv
 source .venv/bin/activate

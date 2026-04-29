@@ -1,6 +1,6 @@
 # Serial Frame Analyzer
 
-A Python-based utility designed to parse, validate, and decode binary serial protocols. This tool mimics the functionality of a protocol sniffer for embedded systems, specifically targeting frame structures similar to the Silicon Labs BGAPI.
+A high-performance Python utility designed to parse, validate, and decode binary serial protocols. This tool mimics the functionality of a protocol sniffer for embedded systems, specifically targeting frame structures similar to the Silicon Labs BGAPI.
 
 ## Overview
 
@@ -9,8 +9,9 @@ The **Serial Frame Analyzer** serves as a bridge for developers to interpret raw
 ## Key Features
 
 - **Binary Parsing:** Decodes structured headers (Type, Length, Class ID, Message ID).
-- **Data Validation:** Integrates CRC-16 checks for frame reliability.
-- **Modern Python:** Utilizes type hinting and `struct` for high-performance binary manipulation.
+- **Data Integrity:** Implements CRC-16/CCITT-FALSE validation to ensure frame reliability.
+- **Protocol Mapping**: Translates raw hex IDs into human-readable Enums (e.g., SYSTEM, DFU).
+- **Observability**: Integrated Python logging for professional error tracking and debugging.
 - **CI/CD Integrated:** Automated testing suite triggered via GitHub Actions.
 
 ## Project Structure (SDLC Evidence)
@@ -30,3 +31,14 @@ cd serial-frame-analyzer
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+```
+
+### Usage
+```bash
+python3 -m src.main "00020105AABBD233"
+```
+
+### Running Tests
+```bash
+python3 -m pytest tests/
+```

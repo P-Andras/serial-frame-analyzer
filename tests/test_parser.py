@@ -9,7 +9,7 @@ def test_valid_command_parsing():
     
     assert result["type"] == "Command"
     assert result["length"] == 2
-    assert result["class"] == "0x1"
+    assert result["class"] == "SYSTEM"
     assert result["id"] == "0x5"
     assert result["payload"] == "AABB"
 
@@ -21,7 +21,7 @@ def test_valid_event_parsing():
     
     assert result["type"] == "Event"
     assert result["length"] == 1
-    assert result["class"] == "0x2"
+    assert result["class"] == "DFU"
     assert result["id"] == "0x3"
     assert result["payload"] == "FF"
 

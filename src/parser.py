@@ -1,5 +1,6 @@
 import struct
 from src.utils import Checksum
+from src.protocol import MsgClass
 
 class ProtocolParser:
     def __init__(self):
@@ -30,10 +31,17 @@ class ProtocolParser:
         if received_crc != calculated_crc:
             raise ValueError(f"CRC Mismatch: Received {hex(received_crc)}, Calculated {hex(calculated_crc)}")
 
+        class_name = "UNKNOWN"
+        for item in MsgClass:
+            if item.value == class_id:
+                class_name = item.name
+                break
+        
+
         return {
             "type": "Event" if (b0 & 0x80) else "Command",
             "length": payload_len,
-            "class": hex(class_id),
+            "class": class_name,
             "id": hex(msg_id),
             "payload": binary_data[4:4 + payload_len].hex().upper()
         }

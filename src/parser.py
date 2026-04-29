@@ -1,6 +1,9 @@
 import struct
+import logging
 from src.utils import Checksum
 from src.protocol import MsgClass
+
+logger = logging.getLogger(__name__)
 
 class ProtocolParser:
     def __init__(self):
@@ -8,10 +11,17 @@ class ProtocolParser:
         self.CRC_SIZE = 2
 
     def parse_hex(self, hex_str: str) -> dict:
-        # Clean input and convert to bytes
-        binary_data = bytes.fromhex(hex_str.replace(" ", ""))
+        logger.debug(f"Parsing input: {hex_str}")
+
+        try:
+            # Clean input and convert to bytes
+            binary_data = bytes.fromhex(hex_str.replace(" ", ""))
+        except ValueError as e:
+            logger.error(f"Invalid hexadecimal input: {hex_str}")
+            raise ValueError(f"Invalid hex string: {e}")
 
         if len(binary_data) < (self.HEADER_SIZE + self.CRC_SIZE):
+            logger.warning(f"Input too short: {len(binary_data)} bytes")
             raise ValueError("Frame too short")
         
         # Unpack first 4 bytes (B = unsigned char, 1 byte)
@@ -20,6 +30,7 @@ class ProtocolParser:
 
         total_expected_size = self.HEADER_SIZE + payload_len + self.CRC_SIZE
         if len(binary_data) < total_expected_size:
+            logger.error(f"Incomplete frame. Expected {total_expected_size}, got {len(binary_data)}")
             raise ValueError(f"Incomplete frame. Expected {total_expected_size} bytes.")
 
         # CRC Verification
@@ -29,6 +40,7 @@ class ProtocolParser:
         calculated_crc = Checksum.crc16(data_to_check)
 
         if received_crc != calculated_crc:
+            logger.error(f"CRC Error! Received: {hex(received_crc)}, Calculated: {hex(calculated_crc)}")
             raise ValueError(f"CRC Mismatch: Received {hex(received_crc)}, Calculated {hex(calculated_crc)}")
 
         class_name = "UNKNOWN"
@@ -37,6 +49,7 @@ class ProtocolParser:
                 class_name = item.name
                 break
         
+        logger.info(f"Successfully parsed {class_name} {msg_id}")
 
         return {
             "type": "Event" if (b0 & 0x80) else "Command",
